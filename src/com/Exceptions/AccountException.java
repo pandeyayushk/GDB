@@ -1,4 +1,4 @@
-package Exceptions;
+package com.Exceptions;
 
 public class AccountException extends Exception {
     public AccountException(String message) {

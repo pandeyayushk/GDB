@@ -1,3 +1,6 @@
+package com.Domain;
+
+import com.Exceptions.*;
 public class FixedDepositAccount extends Account {
     private int tenureMonths;
     private double interestRate;
@@ -11,7 +14,7 @@ public class FixedDepositAccount extends Account {
 
     @Override
     public double getMinimumBalance() {
-        return 0.0; // FD accounts usually don’t require a running minimum balance
+        return 0.0;
     }
 
     @Override
@@ -32,4 +35,13 @@ public class FixedDepositAccount extends Account {
     public double getInterestRate() {
         return interestRate;
     }
+
+    @Override
+    public void withdraw(double amount, int pin) throws AccountException {
+        throw new AccountException(
+                "Premature withdrawals are not permitted on Fixed Deposit accounts before maturity."
+        );
+    }
+
+
 }

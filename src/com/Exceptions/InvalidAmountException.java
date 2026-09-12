@@ -1,4 +1,4 @@
-package Exceptions;
+package com.Exceptions;
 
 public class InvalidAmountException extends AccountException {
     public InvalidAmountException(String message) {

@@ -1,3 +1,7 @@
+package com.Domain;
+
+import com.Exceptions.*;
+
 public class SavingsAccount extends Account {
     private static final double MIN_BALANCE = 1000.0;
     private static final double INTEREST_RATE = 0.04; // 4%
@@ -25,4 +29,22 @@ public class SavingsAccount extends Account {
             System.out.println("EXCEPTION: " + e.getMessage());
         }
     }
+    @Override
+    public void withdraw(double amount, int pin)
+            throws InvalidAmountException, InsufficientBalanceException,
+            MinimumBalanceViolationException, InactiveAccountException, InvalidPinException {
+        double minBalance = getMinimumBalance();
+        if (getBalance() - amount < minBalance) {
+            throw new MinimumBalanceViolationException(
+                    "Cannot withdraw. Minimum balance of ₹" + minBalance +
+                            " required. Available after withdrawal: ₹" + (getBalance() - amount)
+            );
+        }
+        try {
+            super.withdraw(amount, pin);
+        } catch (AccountException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

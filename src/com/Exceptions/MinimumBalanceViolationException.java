@@ -1,4 +1,4 @@
-package Exceptions;
+package com.Exceptions;
 
 public class MinimumBalanceViolationException extends AccountException {
     public MinimumBalanceViolationException(String message) {

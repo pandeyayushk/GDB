@@ -1,4 +1,4 @@
-package Exceptions;
+package com.Exceptions;
 
 public class InvalidPinException extends AccountException {
     public InvalidPinException(String message) {

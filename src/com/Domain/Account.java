@@ -1,4 +1,6 @@
-import Exceptions.*;
+package com.Domain;
+
+import com.Exceptions.*;
 
 public abstract class Account {
 
@@ -50,7 +52,7 @@ public abstract class Account {
     }
 
     public void withdraw(double amount, int pin) throws InvalidAmountException, InsufficientBalanceException,
-            MinimumBalanceViolationException, InactiveAccountException, InvalidPinException {
+            MinimumBalanceViolationException, InactiveAccountException, InvalidPinException,AccountException {
         validateActive();
         validatePin(pin);
         validateAmount(amount);

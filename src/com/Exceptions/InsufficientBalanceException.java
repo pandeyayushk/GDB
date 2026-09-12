@@ -1,4 +1,4 @@
-package Exceptions;
+package com.Exceptions;
 
 public class InsufficientBalanceException extends AccountException {
     public InsufficientBalanceException(String message) {

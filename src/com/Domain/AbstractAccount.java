@@ -74,6 +74,7 @@ public abstract class AbstractAccount implements IAccount {
         if (amount <= 0) throw new InvalidAmountException("Withdrawal amount must be positive. Provided: Rs " + amount);
     }
 
+    @Override
     public void setPin(int pin) {
         validateNewPin(pin);
         this.pin = pin;

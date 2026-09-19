@@ -2,7 +2,7 @@ package com.Domain;
 
 import com.Exceptions.*;
 
-public abstract class AbstractAccount {
+public abstract class AbstractAccount implements IAccount {
     private static final int MIN_AGE = 18;
     private static final int MIN_PIN = 1000;
     private static final int MAX_PIN = 9999;
@@ -32,8 +32,8 @@ public abstract class AbstractAccount {
         this.status = "Active";
     }
 
-    public void deposit(double amount) throws AccountException {
-        validateActive();
+    @Override
+    public void deposit(double amount) throws InvalidAmountException {
         if (amount <= 0) {
             throw new InvalidAmountException("Deposit amount must be positive. Provided: Rs " + amount);
         }
@@ -46,6 +46,15 @@ public abstract class AbstractAccount {
         validateActive();
         validateAmount(amount);
         processDebit(amount);
+    }
+
+    @Override
+    public final void withdraw(double amount, String pin) throws AccountException {
+        try {
+            withdraw(amount, Integer.parseInt(pin));
+        } catch (NumberFormatException e) {
+            throw new InvalidPinException("PIN must be a 4-digit number.");
+        }
     }
 
     protected abstract void processDebit(double amount) throws AccountException;
@@ -93,6 +102,7 @@ public abstract class AbstractAccount {
         status = "Active";
     }
 
+    @Override
     public void displayAccountInfo() {
         System.out.println("Account Number: " + accountNumber);
         System.out.println("Name: " + name);
@@ -103,11 +113,17 @@ public abstract class AbstractAccount {
     }
 
     protected void setBalance(double balance) { this.balance = balance; }
+    @Override
     public int getAccountNumber() { return accountNumber; }
     public String getName() { return name; }
+    @Override
+    public String getCustomerName() { return name; }
     public int getAge() { return age; }
+    @Override
     public double getBalance() { return balance; }
+    @Override
     public String getAccountType() { return accountType; }
+    @Override
     public String getStatus() { return status; }
     public Integer getPin() { return pin; }
 }

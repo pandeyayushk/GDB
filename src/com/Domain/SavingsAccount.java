@@ -1,50 +1,30 @@
 package com.Domain;
 
-import com.Exceptions.*;
+import com.Exceptions.AccountException;
+import com.Exceptions.MinimumBalanceViolationException;
 
-public class SavingsAccount extends Account {
+public class SavingsAccount extends AbstractAccount {
     private static final double MIN_BALANCE = 1000.0;
-    private static final double INTEREST_RATE = 0.04; // 4%
+    private static final double INTEREST_RATE = 0.04;
 
     public SavingsAccount(int accountNumber, String name, int age, double initialBalance) {
-        super(accountNumber, name, age, initialBalance);
+        super(accountNumber, name, age, initialBalance, "Savings", MIN_BALANCE);
     }
 
     @Override
-    public double getMinimumBalance() {
-        return MIN_BALANCE;
-    }
-
-    @Override
-    public String getAccountType() {
-        return "Savings";
+    protected void processDebit(double amount) throws AccountException {
+        if (getBalance() - amount < MIN_BALANCE) {
+            throw new MinimumBalanceViolationException("Cannot withdraw. Minimum balance of Rs " + MIN_BALANCE
+                    + " required. Available after withdrawal: Rs " + (getBalance() - amount));
+        }
+        setBalance(getBalance() - amount);
     }
 
     public void applyInterest() {
-        double interest = getBalance() * INTEREST_RATE;
         try {
-            deposit(interest);
-            System.out.println("Interest applied: ₹" + interest);
-        } catch (Exception e) {
+            deposit(getBalance() * INTEREST_RATE);
+        } catch (AccountException e) {
             System.out.println("EXCEPTION: " + e.getMessage());
         }
     }
-    @Override
-    public void withdraw(double amount, int pin)
-            throws InvalidAmountException, InsufficientBalanceException,
-            MinimumBalanceViolationException, InactiveAccountException, InvalidPinException {
-        double minBalance = getMinimumBalance();
-        if (getBalance() - amount < minBalance) {
-            throw new MinimumBalanceViolationException(
-                    "Cannot withdraw. Minimum balance of ₹" + minBalance +
-                            " required. Available after withdrawal: ₹" + (getBalance() - amount)
-            );
-        }
-        try {
-            super.withdraw(amount, pin);
-        } catch (AccountException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

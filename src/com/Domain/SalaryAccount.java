@@ -1,34 +1,30 @@
 package com.Domain;
 
-public class SalaryAccount extends Account {
+import com.Exceptions.AccountException;
+import com.Exceptions.InsufficientBalanceException;
+
+public class SalaryAccount extends AbstractAccount {
     private static final double MIN_BALANCE = 0.0;
-    private String employerName;
+    private final String employerName;
     private int inactiveMonths;
 
-    public SalaryAccount(int accountNumber, String name, int age, double initialBalance,
-                         String employerName) {
-        super(accountNumber, name, age, initialBalance);
+    public SalaryAccount(int accountNumber, String name, int age, double initialBalance, String employerName) {
+        super(accountNumber, name, age, initialBalance, "Salary", MIN_BALANCE);
         this.employerName = employerName;
-        this.inactiveMonths = 0;
+        this.inactiveMonths=0;
     }
 
     @Override
-    public double getMinimumBalance() {
-        return MIN_BALANCE;
+    protected void processDebit(double amount) throws AccountException {
+        if (amount > getBalance()) {
+            throw new InsufficientBalanceException("Insufficient balance. Available: Rs " + getBalance()
+                    + ", Requested: Rs " + amount);
+        }
+        setBalance(getBalance() - amount);
     }
 
-    @Override
-    public String getAccountType() {
-        return "Salary";
-    }
-
-    public String getEmployerName() {
-        return employerName;
-    }
-
-    public int getInactiveMonths() {
-        return inactiveMonths;
-    }
+    public String getEmployerName() { return employerName; }
+    public int getInactiveMonths() { return inactiveMonths; }
 
     public void incrementInactiveMonths() {
         inactiveMonths++;

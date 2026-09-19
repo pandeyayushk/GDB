@@ -1,49 +1,27 @@
 package com.Domain;
 
-import com.Exceptions.*;
+import com.Exceptions.AccountException;
+import com.Exceptions.InsufficientBalanceException;
 
-public class CurrentAccount extends Account {
+public class CurrentAccount extends AbstractAccount {
     private static final double MIN_BALANCE = 5000.0;
     private double overdraftLimit;
 
-    public CurrentAccount(int accountNumber, String name, int age, double initialBalance) {
-        super(accountNumber, name, age, initialBalance);
-        this.overdraftLimit = 25000.0;
-    }
-
-    @Override
-    public double getMinimumBalance() {
-        return MIN_BALANCE;
-    }
-
-    @Override
-    public String getAccountType() {
-        return "Current";
-    }
-
-    public double getOverdraftLimit() {
-        return overdraftLimit;
-    }
-
-    public void setOverdraftLimit(double overdraftLimit) {
+    public CurrentAccount(int accountNumber, String name, int age, double initialBalance, double overdraftLimit) {
+        super(accountNumber, name, age, initialBalance, "Current", MIN_BALANCE);
         this.overdraftLimit = overdraftLimit;
     }
 
     @Override
-    public void withdraw(double amount, int pin)
-            throws InvalidAmountException, InsufficientBalanceException,
-            InactiveAccountException, InvalidPinException {
-        validateActive();
-        validatePin(pin);
-        validateAmount(amount);
+    protected void processDebit(double amount) throws AccountException {
         double availableFunds = getBalance() + overdraftLimit;
         if (amount > availableFunds) {
-            throw new InsufficientBalanceException(
-                    "Insufficient funds. Available including overdraft: ₹" + availableFunds +
-                            ", Requested: ₹" + amount
-            );
+            throw new InsufficientBalanceException("Insufficient funds. Available including overdraft: Rs "
+                    + availableFunds + ", Requested: Rs " + amount);
         }
         setBalance(getBalance() - amount);
     }
 
+    public double getOverdraftLimit() { return overdraftLimit; }
+    public void setOverdraftLimit(double overdraftLimit) { this.overdraftLimit = overdraftLimit; }
 }

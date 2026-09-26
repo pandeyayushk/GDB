@@ -22,7 +22,8 @@ public final class AccountFactory {
 
     /**
      * Creates an account and optionally accepts type-specific values:
-     * CURRENT: overdraft limit; FIXED_DEPOSIT/FD: tenure months, interest rate;
+     * SAVINGS: customer tenure in years; CURRENT: overdraft limit;
+     * FIXED_DEPOSIT/FD: tenure months, interest rate;
      * SALARY: employer name.
      */
     public static IAccount createAccount(String accountType, int accountNumber, String customerName,
@@ -33,7 +34,8 @@ public final class AccountFactory {
 
         switch (accountType.trim().toUpperCase()) {
             case "SAVINGS":
-                return new SavingsAccount(accountNumber, customerName, age, initialBalance);
+                return new SavingsAccount(accountNumber, customerName, age, initialBalance,
+                        numberAt(typeSpecificDetails, 0, 0).intValue());
             case "CURRENT":
                 return new CurrentAccount(accountNumber, customerName, age, initialBalance,
                         numberAt(typeSpecificDetails, 0, DEFAULT_OVERDRAFT_LIMIT).doubleValue());

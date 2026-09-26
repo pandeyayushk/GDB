@@ -1,4 +1,4 @@
-package com.Exceptions;
+package com.gdb.Exceptions;
 
 public class AccountException extends Exception {
     public AccountException(String message) {

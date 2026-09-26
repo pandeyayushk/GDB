@@ -1,7 +1,7 @@
-package com.Domain;
+package com.gdb.Domain;
 
-import com.Exceptions.AccountException;
-import com.Exceptions.MinimumBalanceViolationException;
+import com.gdb.Exceptions.AccountException;
+import com.gdb.Exceptions.MinimumBalanceViolationException;
 
 public class SavingsAccount extends AbstractAccount {
     private final int tenureYears;

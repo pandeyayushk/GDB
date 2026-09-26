@@ -1,7 +1,7 @@
-package com.Domain;
+package com.gdb.Domain;
 
-import com.Exceptions.AccountException;
-import com.Exceptions.InvalidAmountException;
+import com.gdb.Exceptions.AccountException;
+import com.gdb.Exceptions.InvalidAmountException;
 
 /**
  * Common operations available on every type of bank account.

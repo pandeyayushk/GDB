@@ -1,4 +1,4 @@
-package com.Exceptions;
+package com.gdb.Exceptions;
 
 public class InvalidPinException extends AccountException {
     public InvalidPinException(String message) {

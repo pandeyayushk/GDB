@@ -1,15 +1,14 @@
-package com.Domain;
+package com.gdb.Domain;
 
-import com.Exceptions.AccountException;
-import com.Exceptions.InsufficientBalanceException;
+import com.gdb.Exceptions.AccountException;
+import com.gdb.Exceptions.InsufficientBalanceException;
 
 public class SalaryAccount extends AbstractAccount {
-    private static final double MIN_BALANCE = 0.0;
     private final String employerName;
     private int inactiveMonths;
 
     public SalaryAccount(int accountNumber, String name, int age, double initialBalance, String employerName) {
-        super(accountNumber, name, age, initialBalance, "Salary", MIN_BALANCE);
+        super(accountNumber, name, age, initialBalance, "Salary", AccountRulesEngine.getSalaryMinBalance());
         this.employerName = employerName;
         this.inactiveMonths=0;
     }
@@ -28,7 +27,7 @@ public class SalaryAccount extends AbstractAccount {
 
     public void incrementInactiveMonths() {
         inactiveMonths++;
-        if (inactiveMonths >= 6) {
+        if (inactiveMonths >= AccountRulesEngine.getSalaryInactivityMonths()) {
             closeAccount();
             System.out.println("Account closed due to inactivity for 6 months.");
         }

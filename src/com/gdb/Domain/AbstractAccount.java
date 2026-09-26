@@ -1,6 +1,6 @@
-package com.Domain;
+package com.gdb.Domain;
 
-import com.Exceptions.*;
+import com.gdb.Exceptions.*;
 
 public abstract class AbstractAccount implements IAccount {
     private static final int MIN_AGE = 18;

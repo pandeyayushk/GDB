@@ -1,10 +1,9 @@
-package com.Domain;
+package com.gdb.Domain;
 
 /** Creates account instances without exposing their concrete types to callers. */
 public final class AccountFactory {
     private static final double DEFAULT_OVERDRAFT_LIMIT = 0.0;
     private static final int DEFAULT_FD_TENURE_MONTHS = 12;
-    private static final double DEFAULT_FD_INTEREST_RATE = 0.0;
     private static final String DEFAULT_EMPLOYER_NAME = "Not specified";
 
     private AccountFactory() {
@@ -40,10 +39,12 @@ public final class AccountFactory {
                 return new CurrentAccount(accountNumber, customerName, age, initialBalance,
                         numberAt(typeSpecificDetails, 0, DEFAULT_OVERDRAFT_LIMIT).doubleValue());
             case "FIXED_DEPOSIT":
-            case "FD":
+            case "FD": {
+                int tenureMonths = numberAt(typeSpecificDetails, 0, DEFAULT_FD_TENURE_MONTHS).intValue();
+                double defaultRate = AccountRulesEngine.getFDInterestRate(tenureMonths);
                 return new FixedDepositAccount(accountNumber, customerName, age, initialBalance,
-                        numberAt(typeSpecificDetails, 0, DEFAULT_FD_TENURE_MONTHS).intValue(),
-                        numberAt(typeSpecificDetails, 1, DEFAULT_FD_INTEREST_RATE).doubleValue());
+                        tenureMonths, numberAt(typeSpecificDetails, 1, defaultRate).doubleValue());
+            }
             case "SALARY":
                 return new SalaryAccount(accountNumber, customerName, age, initialBalance,
                         stringAt(typeSpecificDetails, 0, DEFAULT_EMPLOYER_NAME));

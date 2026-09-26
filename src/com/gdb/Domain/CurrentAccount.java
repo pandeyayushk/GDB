@@ -1,14 +1,13 @@
-package com.Domain;
+package com.gdb.Domain;
 
-import com.Exceptions.AccountException;
-import com.Exceptions.InsufficientBalanceException;
+import com.gdb.Exceptions.AccountException;
+import com.gdb.Exceptions.InsufficientBalanceException;
 
 public class CurrentAccount extends AbstractAccount {
-    private static final double MIN_BALANCE = 5000.0;
     private double overdraftLimit;
 
     public CurrentAccount(int accountNumber, String name, int age, double initialBalance, double overdraftLimit) {
-        super(accountNumber, name, age, initialBalance, "Current", MIN_BALANCE);
+        super(accountNumber, name, age, initialBalance, "Current", AccountRulesEngine.getCurrentMinBalance());
         this.overdraftLimit = overdraftLimit;
     }
 

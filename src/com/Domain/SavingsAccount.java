@@ -4,17 +4,26 @@ import com.Exceptions.AccountException;
 import com.Exceptions.MinimumBalanceViolationException;
 
 public class SavingsAccount extends AbstractAccount {
-    private static final double MIN_BALANCE = 1000.0;
-    private static final double INTEREST_RATE = 0.04;
+    private final int tenureYears;
+    private final double minBalance;
+    private final double interestRate;
 
     public SavingsAccount(int accountNumber, String name, int age, double initialBalance) {
-        super(accountNumber, name, age, initialBalance, "Savings", MIN_BALANCE);
+        this(accountNumber, name, age, initialBalance, 0);
+    }
+
+    public SavingsAccount(int accountNumber, String name, int age, double initialBalance, int tenureYears) {
+        super(accountNumber, name, age, initialBalance, "Savings",
+                AccountRulesEngine.getSavingsMinBalance(tenureYears));
+        this.tenureYears = tenureYears;
+        this.minBalance = AccountRulesEngine.getSavingsMinBalance(tenureYears);
+        this.interestRate = AccountRulesEngine.getSavingsInterestRate(tenureYears);
     }
 
     @Override
     protected void processDebit(double amount) throws AccountException {
-        if (getBalance() - amount < MIN_BALANCE) {
-            throw new MinimumBalanceViolationException("Cannot withdraw. Minimum balance of Rs " + MIN_BALANCE
+        if (getBalance() - amount < minBalance) {
+            throw new MinimumBalanceViolationException("Cannot withdraw. Minimum balance of Rs " + minBalance
                     + " required. Available after withdrawal: Rs " + (getBalance() - amount));
         }
         setBalance(getBalance() - amount);
@@ -22,9 +31,13 @@ public class SavingsAccount extends AbstractAccount {
 
     public void applyInterest() {
         try {
-            deposit(getBalance() * INTEREST_RATE);
+            deposit(getBalance() * interestRate / 100.0);
         } catch (AccountException e) {
             System.out.println("EXCEPTION: " + e.getMessage());
         }
     }
+
+    public int getTenureYears() { return tenureYears; }
+    public double getMinBalance() { return minBalance; }
+    public double getInterestRate() { return interestRate; }
 }

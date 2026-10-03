@@ -13,7 +13,7 @@ public interface TransactionCommand extends Serializable {
     // INSTRUCTIONS:
     //   Declare void execute() throws Exception
     // ============================================================
-    // TODO: declare execute() method
+
     void execute() throws Exception;
     
     // ============================================================
@@ -22,6 +22,5 @@ public interface TransactionCommand extends Serializable {
     // INSTRUCTIONS:
     //   Declare Transaction getTransaction()
     // ============================================================
-    // TODO: declare getTransaction() method
     Transaction getTransaction();
 }

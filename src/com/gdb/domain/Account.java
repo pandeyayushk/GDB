@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
  * Abstract class Account implementing default behavior for IAccount interface.
  * Encapsulates common state fields, customer tenure, and default validation routines.
  */
-public abstract class Account implements IAccount {
+public abstract class Account implements IAccount, java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     protected int accountNumber;
     protected String accountHolderName;
     protected int age;
@@ -144,9 +145,6 @@ public abstract class Account implements IAccount {
     public double getDailyTransferTotal() { return dailyTransferTotal; }
     public LocalDateTime getLastTransferDate() { return lastTransferDate; }
 
-    // ============================================================
-    // Helper: buildTransaction (COMPLETE — provided for convenience)
-    // ============================================================
     protected Transaction buildTransaction(TransactionType type, double amount, 
                                            int fromAcc, int toAcc, String desc) {
         return new Transaction(
@@ -158,26 +156,11 @@ public abstract class Account implements IAccount {
         );
     }
 
-    // ============================================================
-    // 📝 STEP 7: Add depositWithTransaction
-    //
-    // INSTRUCTIONS:
-    //   1. Call deposit(amount) to perform standard deposit logic and validation.
-    //   2. Build and return a Transaction object with type DEPOSIT using buildTransaction().
-    // ============================================================
     public Transaction depositWithTransaction(double amount) throws AccountException {
         deposit(amount);
         return buildTransaction(TransactionType.DEPOSIT, amount, 0, 0, "Deposit of Rs. " + amount);
     }
 
-    // ============================================================
-    // 📝 STEP 8: Add withdrawWithTransaction
-    //
-    // INSTRUCTIONS:
-    //   1. Call withdraw(amount, pin) to perform standard withdrawal logic and validation.
-    //   2. Build and return a Transaction object with type WITHDRAW using buildTransaction().
-    // ============================================================
-    // TODO: perform withdraw and return Transaction record
     public Transaction withdrawWithTransaction(double amount, int pin) throws AccountException {
         withdraw(amount, pin);
         return buildTransaction(TransactionType.WITHDRAW, amount, 0, 0, "Withdrawal of Rs. " + amount);

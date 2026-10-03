@@ -22,7 +22,6 @@ public class TestCommandLogging {
         //   2. acc1.setPin(1234);
         //   3. acc2 = AccountFactory.createAccount("SAVINGS", 1002, "Jane Smith", 30, 10000);
         // ============================================================
-        // TODO: create acc1, acc2 and set PIN on acc1
         IAccount acc1 = AccountFactory.createAccount("SAVINGS", 1001, "John Doe", 25, 15000);
         acc1.setPin(1234);
         IAccount acc2 = AccountFactory.createAccount("SAVINGS", 1002, "Jane Smith", 30, 10000);
@@ -36,7 +35,7 @@ public class TestCommandLogging {
         //   3. log.log(depCmd);
         //   4. Print depCmd.getTransaction();
         // ============================================================
-        // TODO: execute and log DepositCommand
+
         DepositCommand depCmd = new DepositCommand(acc1, 5000);
         depCmd.execute();
         log.log(depCmd);
@@ -51,7 +50,7 @@ public class TestCommandLogging {
         //   3. log.log(wthCmd);
         //   4. Print wthCmd.getTransaction();
         // ============================================================
-        // TODO: execute and log WithdrawCommand
+
         WithdrawCommand wthCmd = new WithdrawCommand(acc1, 2000, 1234);
         wthCmd.execute();
         log.log(wthCmd);
@@ -66,7 +65,6 @@ public class TestCommandLogging {
         //   3. log.log(trfCmd);
         //   4. Print trfCmd.getTransaction();
         // ============================================================
-        // TODO: execute and log TransferCommand
         TransferCommand trfCmd = new TransferCommand(acc1, acc2, 3000, 1234);
         trfCmd.execute();
         log.log(trfCmd);
@@ -79,7 +77,6 @@ public class TestCommandLogging {
         //   1. List<TransactionCommand> history = log.readAll();
         //   2. Print history size and iterate printing each cmd.getTransaction();
         // ============================================================
-        // TODO: read all logged commands and display audit trail
         List<TransactionCommand> history = log.readAll();
         System.out.println("\n[STEP 14] Read " + history.size() + " commands from transaction log:");
         for (int i = 0; i < history.size(); i++) {
@@ -94,7 +91,7 @@ public class TestCommandLogging {
         //   2. List<TransactionCommand> persisted = freshLog.readAll();
         //   3. Verify persisted.size() matches previous count.
         // ============================================================
-        // TODO: verify persistence from independent log reader instance
+
         TransactionLog freshLog = new TransactionLog();
         List<TransactionCommand> persisted = freshLog.readAll();
         if (persisted.size() == history.size()) {

@@ -26,7 +26,6 @@ public class TestBridgeLogging {
         //   3. dbDest = new DatabaseLogDestination(db);
         //   4. memDest = new MemoryLogDestination();
         // ============================================================
-        // TODO: instantiate all log destinations
         LogDestination fileDest = new FileLogDestination();
         fileDest.clear();
         SimulatedDatabase db = new SimulatedDatabase();
@@ -41,7 +40,6 @@ public class TestBridgeLogging {
         //   2. Execute and log 3 commands (Deposit, Withdraw, Transfer).
         //   3. Print count from logger.readAll().
         // ============================================================
-        // TODO: log transactions to FILE destination
         System.out.println("\n[STEP 25] Logging to FILE destination...");
         TransactionLogger logger = new TransactionLogger(fileDest);
         DepositCommand dep1 = new DepositCommand(acc1, 5000);
@@ -66,7 +64,7 @@ public class TestBridgeLogging {
         //   2. Execute and log 3 commands.
         //   3. Print count from logger.readAll().
         // ============================================================
-        // TODO: log transactions to DATABASE destination
+
         System.out.println("\n[STEP 26] Switched to DATABASE destination...");
         logger.setDestination(dbDest);
         DepositCommand dep2 = new DepositCommand(acc1, 5000);
@@ -91,7 +89,6 @@ public class TestBridgeLogging {
         //   2. Execute and log 3 commands.
         //   3. Print count from logger.readAll().
         // ============================================================
-        // TODO: log transactions to MEMORY destination
         System.out.println("\n[STEP 27] Switched to MEMORY destination...");
         logger.setDestination(memDest);
         DepositCommand dep3 = new DepositCommand(acc1, 5000);
@@ -116,7 +113,6 @@ public class TestBridgeLogging {
         //   2. logger.setDestination(dbDest); print count (should be 3).
         //   3. logger.setDestination(memDest); print count (should be 3).
         // ============================================================
-        // TODO: verify each backend maintained its independent data store
         System.out.println("\n[STEP 28] Verifying Data Isolation:");
         logger.setDestination(fileDest);
         int fileCount = logger.readAll().size();
@@ -136,7 +132,6 @@ public class TestBridgeLogging {
         // INSTRUCTIONS:
         //   Print getDestinationName() for each backend.
         // ============================================================
-        // TODO: display active backend names
         if (fileCount == 3 && dbCount == 3 && memCount == 3) {
             System.out.println("\n[STEP 29] All Bridge Pattern log backends verified successfully!");
         }

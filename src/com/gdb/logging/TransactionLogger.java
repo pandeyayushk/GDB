@@ -11,13 +11,11 @@ public class TransactionLogger {
     // ============================================================
     // 📝 STEP 17: Declare Field
     // ============================================================
-    // TODO: declare protected LogDestination destination;
     protected LogDestination destination;
 
     // ============================================================
     // 📝 STEP 18: Constructor
     // ============================================================
-    // TODO: implement constructor accepting LogDestination
     public TransactionLogger(LogDestination destination) {
         this.destination = destination;
     }
@@ -25,7 +23,6 @@ public class TransactionLogger {
     // ============================================================
     // 📝 STEP 19: setDestination
     // ============================================================
-    // TODO: implement setter for hot-swapping destination
     public void setDestination(LogDestination destination) {
         this.destination = destination;
     }
@@ -33,7 +30,6 @@ public class TransactionLogger {
     // ============================================================
     // 📝 STEP 20: log(TransactionCommand cmd)
     // ============================================================
-    // TODO: delegate to destination.write(cmd)
     public void log(TransactionCommand cmd) {
         destination.write(cmd);
     }
@@ -41,7 +37,6 @@ public class TransactionLogger {
     // ============================================================
     // 📝 STEP 21: readAll()
     // ============================================================
-    // TODO: delegate to destination.readAll()
     public List<TransactionCommand> readAll() {
         return destination.readAll();
     }
@@ -49,7 +44,6 @@ public class TransactionLogger {
     // ============================================================
     // 📝 STEP 22: clear()
     // ============================================================
-    // TODO: delegate to destination.clear()
     public void clear() {
         destination.clear();
     }
@@ -57,7 +51,6 @@ public class TransactionLogger {
     // ============================================================
     // 📝 STEP 23: getDestinationName()
     // ============================================================
-    // TODO: delegate to destination.getDestinationName()
     public String getDestinationName() {
         return destination.getDestinationName();
     }

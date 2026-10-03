@@ -9,13 +9,13 @@ public class FileLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 5: Declare Field
     // ============================================================
-    // TODO: declare private TransactionLog log;
+
     private TransactionLog log;
 
     // ============================================================
     // 📝 STEP 6: Constructor
     // ============================================================
-    // TODO: initialize log = new TransactionLog()
+    
     public FileLogDestination() {
         this.log = new TransactionLog();
     }
@@ -23,7 +23,7 @@ public class FileLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 7: write(cmd)
     // ============================================================
-    // TODO: delegate to log.log(cmd)
+    
     @Override
     public void write(TransactionCommand cmd) {
         try {
@@ -36,7 +36,7 @@ public class FileLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 8: readAll()
     // ============================================================
-    // TODO: delegate to log.readAll()
+
     @Override
     public List<TransactionCommand> readAll() {
         try {
@@ -49,7 +49,6 @@ public class FileLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 9: clear()
     // ============================================================
-    // TODO: delegate to log.clear()
     @Override
     public void clear() {
         log.clear();
@@ -58,7 +57,6 @@ public class FileLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 10: getDestinationName()
     // ============================================================
-    // TODO: return "FILE"
     @Override
     public String getDestinationName() {
         return "FILE";

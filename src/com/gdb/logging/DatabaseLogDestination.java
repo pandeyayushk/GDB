@@ -10,13 +10,11 @@ public class DatabaseLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 11: Declare Field
     // ============================================================
-    // TODO: declare private final SimulatedDatabase db;
     private final SimulatedDatabase db;
 
     // ============================================================
     // 📝 STEP 12: Constructor
     // ============================================================
-    // TODO: implement constructor accepting SimulatedDatabase
     public DatabaseLogDestination(SimulatedDatabase db) {
         this.db = db;
     }
@@ -24,7 +22,6 @@ public class DatabaseLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 13: write(cmd)
     // ============================================================
-    // TODO: insert command into database table
     @Override
     public void write(TransactionCommand cmd) {
         db.insert(TABLE, cmd);
@@ -38,7 +35,6 @@ public class DatabaseLogDestination implements LogDestination {
     //   2. Map/cast each Object to TransactionCommand.
     //   3. Collect and return List<TransactionCommand>.
     // ============================================================
-    // TODO: retrieve and return all commands from database
     @Override
     public List<TransactionCommand> readAll() {
         List<TransactionCommand> commands = new ArrayList<>();
@@ -53,7 +49,6 @@ public class DatabaseLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 15: clear()
     // ============================================================
-    // TODO: delete all records from database table
     @Override
     public void clear() {
         db.deleteAll(TABLE);
@@ -62,7 +57,6 @@ public class DatabaseLogDestination implements LogDestination {
     // ============================================================
     // 📝 STEP 16: getDestinationName()
     // ============================================================
-    // TODO: return "DATABASE"
     @Override
     public String getDestinationName() {
         return "DATABASE";

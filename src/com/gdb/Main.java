@@ -20,7 +20,7 @@ public class Main {
         //   4. AccountUI ui = new AccountUI(service);
         //   5. ui.start();
         // ============================================================
-        // TODO: initialize dependencies and launch AccountUI console app
+    
         LogDestination destination = new FileLogDestination();
         TransactionLogger logger = new TransactionLogger(destination);
         AccountService service = new AccountService(logger);

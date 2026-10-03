@@ -12,7 +12,7 @@ public class AccountUI {
     // ============================================================
     // 📝 STEP 1: Declare Fields
     // ============================================================
-    // TODO: declare private final AccountService service and Scanner scanner
+
     private final AccountService service;
     private final Scanner scanner;
 
@@ -24,7 +24,7 @@ public class AccountUI {
     //   2. Assign to this.service.
     //   3. Initialize scanner = new Scanner(System.in).
     // ============================================================
-    // TODO: implement constructor
+   
     public AccountUI(AccountService service) {
         this.service = service;
         this.scanner = new Scanner(System.in);
@@ -54,7 +54,7 @@ public class AccountUI {
     //     }
     //   }
     // ============================================================
-    // TODO: implement start() menu loop
+ 
     public void start() {
         while (true) {
             displayMainMenu();
@@ -87,7 +87,7 @@ public class AccountUI {
     // ============================================================
     // 📝 STEP 4: Implement displayMainMenu()
     // ============================================================
-    // TODO: print formatted main menu options
+ 
     private void displayMainMenu() {
         System.out.println("\n" + "=".repeat(40));
         System.out.println("   GLOBAL DIGITAL BANK");
@@ -116,7 +116,7 @@ public class AccountUI {
     //   7. int pin = readInt("Set 4-digit PIN: ")
     //   8. acc.setPin(pin)
     // ============================================================
-    // TODO: implement account opening interaction
+    
     private void handleOpenAccount() throws Exception {
         System.out.println("\n--- Open Account ---");
         String type = readString("Account Type (Savings/Current/FixedDeposit/Salary): ");
@@ -139,7 +139,7 @@ public class AccountUI {
     //   3. Transaction txn = service.deposit(accNo, amount)
     //   4. Print success + new balance
     // ============================================================
-    // TODO: implement deposit interaction
+
     private void handleDeposit() throws Exception {
         System.out.println("\n--- Deposit ---");
         int accNo = readInt("Account Number: ");
@@ -158,7 +158,7 @@ public class AccountUI {
     //   4. Transaction txn = service.withdraw(accNo, amount, pin)
     //   5. Print success + new balance
     // ============================================================
-    // TODO: implement withdrawal interaction
+ 
     private void handleWithdraw() throws Exception {
         System.out.println("\n--- Withdraw ---");
         int accNo = readInt("Account Number: ");
@@ -179,7 +179,7 @@ public class AccountUI {
     //   5. Transaction txn = service.transfer(fromAcc, toAcc, amount, pin)
     //   6. Print success message
     // ============================================================
-    // TODO: implement transfer interaction
+  
     private void handleTransfer() throws Exception {
         System.out.println("\n--- Transfer ---");
         int fromAcc = readInt("From Account: ");
@@ -199,7 +199,7 @@ public class AccountUI {
     //   3. service.closeAccount(accNo, pin)
     //   4. Print success message
     // ============================================================
-    // TODO: implement close account interaction
+  
     private void handleCloseAccount() throws Exception {
         System.out.println("\n--- Close Account ---");
         int accNo = readInt("Account Number: ");
@@ -217,7 +217,7 @@ public class AccountUI {
     //   3. If null -> "Account not found: " + accNo
     //   4. Else -> print acc.getAccountInfo()
     // ============================================================
-    // TODO: implement view account details
+
     private void handleViewAccount() {
         System.out.println("\n--- View Account Details ---");
         int accNo = readInt("Account Number: ");
@@ -237,7 +237,7 @@ public class AccountUI {
     //   2. If empty -> "No transactions logged."
     //   3. Else print each with index
     // ============================================================
-    // TODO: implement view transaction history
+  
     private void handleViewTransactions() {
         System.out.println("\n--- Transaction History ---");
         List<TransactionCommand> history = service.getTransactionHistory();
@@ -253,7 +253,7 @@ public class AccountUI {
     // ============================================================
     // 📝 STEP 12: Implement readInt(String prompt)
     // ============================================================
-    // TODO: implement robust integer reader
+  
     private int readInt(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -269,7 +269,7 @@ public class AccountUI {
     // ============================================================
     // 📝 STEP 13: Implement readDouble(String prompt)
     // ============================================================
-    // TODO: implement robust double reader
+   
     private double readDouble(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -285,7 +285,7 @@ public class AccountUI {
     // ============================================================
     // 📝 STEP 14: Implement readString(String prompt)
     // ============================================================
-    // TODO: implement string reader
+ 
     private String readString(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine().trim();

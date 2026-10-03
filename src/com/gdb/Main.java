@@ -19,7 +19,7 @@ public class Main {
         //   2. TransactionLogger logger = new TransactionLogger(dest);
         //   3. AccountService service = new AccountService(logger);
         // ============================================================
-        // TODO: instantiate FileLogDestination, TransactionLogger, and AccountService
+
         LogDestination dest = new FileLogDestination();
         TransactionLogger logger = new TransactionLogger(dest);
         AccountService service = new AccountService(logger);
@@ -31,7 +31,7 @@ public class Main {
         //   1. Open accounts, set PINs, perform deposit, withdraw, transfer.
         //   2. Print balances and transaction history.
         // ============================================================
-        // TODO: execute demo workflow through AccountService
+
         IAccount acc1 = service.openAccount("SAVINGS", "Alice", 28, 25000);
         acc1.setPin(1111);
         IAccount acc2 = service.openAccount("CURRENT", "Bob", 35, 50000);

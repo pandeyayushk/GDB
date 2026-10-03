@@ -17,7 +17,7 @@ public class AccountService {
     // ============================================================
     // 📝 STEP 1: Declare Fields
     // ============================================================
-    // TODO: declare accounts map, logger, transferService, and nextAccountNumber
+
     private Map<Integer, IAccount> accounts;
     private TransactionLogger logger;
     private TransferService transferService;
@@ -33,7 +33,7 @@ public class AccountService {
     //   4. Initialize transferService = new TransferService().
     //   5. Initialize nextAccountNumber = 1001.
     // ============================================================
-    // TODO: implement constructor
+
     public AccountService(TransactionLogger logger) {
         this.logger = logger;
         this.accounts = new HashMap<>();
@@ -50,7 +50,7 @@ public class AccountService {
     //   3. accounts.put(accountNumber, account);
     //   4. return account;
     // ============================================================
-    // TODO: open and register a new account
+
     public IAccount openAccount(String type, String name, int age, double initialBalance)
             throws AccountException {
         int accountNumber = nextAccountNumber++;
@@ -68,7 +68,7 @@ public class AccountService {
     //   3. If !account.verifyPin(pin) -> throw new InvalidPinException("Incorrect PIN");
     //   4. Call account.closeAccount();
     // ============================================================
-    // TODO: close account after PIN verification
+
     public void closeAccount(int accountNumber, int pin) throws AccountException {
         IAccount account = accounts.get(accountNumber);
         if (account == null) {
@@ -90,7 +90,7 @@ public class AccountService {
     //   4. logger.log(cmd);
     //   5. return cmd.getTransaction();
     // ============================================================
-    // TODO: execute and log deposit command
+
     public Transaction deposit(int accountNumber, double amount) throws Exception {
         IAccount account = accounts.get(accountNumber);
         if (account == null) {
@@ -114,7 +114,7 @@ public class AccountService {
     //   4. logger.log(cmd);
     //   5. return cmd.getTransaction();
     // ============================================================
-    // TODO: execute and log withdraw command
+
     public Transaction withdraw(int accountNumber, double amount, int pin) throws Exception {
         IAccount account = accounts.get(accountNumber);
         if (account == null) {
@@ -138,7 +138,7 @@ public class AccountService {
     //   4. logger.log(cmd);
     //   5. return cmd.getTransaction();
     // ============================================================
-    // TODO: execute and log transfer command
+
     public Transaction transfer(int fromAccountNumber, int toAccountNumber,
                                 double amount, int pin) throws Exception {
         IAccount fromAccount = accounts.get(fromAccountNumber);
@@ -163,7 +163,7 @@ public class AccountService {
     // INSTRUCTIONS:
     //   return accounts.get(accountNumber);
     // ============================================================
-    // TODO: return account by number
+
     public IAccount getAccount(int accountNumber) {
         return accounts.get(accountNumber);
     }
@@ -174,7 +174,7 @@ public class AccountService {
     // INSTRUCTIONS:
     //   return new ArrayList<>(accounts.values());
     // ============================================================
-    // TODO: return list of all active accounts
+
     public List<IAccount> getAllAccounts() {
         return new ArrayList<>(accounts.values());
     }
@@ -185,7 +185,7 @@ public class AccountService {
     // INSTRUCTIONS:
     //   return logger != null ? logger.readAll() : new ArrayList<>();
     // ============================================================
-    // TODO: return all logged transaction commands
+
     public List<TransactionCommand> getTransactionHistory() {
         return logger != null ? logger.readAll() : new ArrayList<>();
     }
@@ -196,7 +196,7 @@ public class AccountService {
     // INSTRUCTIONS:
     //   return nextAccountNumber;
     // ============================================================
-    // TODO: return next available account number
+    
     public int getNextAccountNumber() {
         return nextAccountNumber;
     }

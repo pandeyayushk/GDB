@@ -17,16 +17,6 @@ public abstract class Account implements IAccount {
     protected String openingDate;
     protected int tenureYears;
 
-    // ============================================================
-    // 📝 STEP 2.1: Daily Transfer Tracking Fields
-    //
-    // INSTRUCTIONS:
-    //   1. dailyTransferTotal holds the sum of all transfers sent today (starts at 0.0).
-    //   2. lastTransferDate records when that total was last updated (starts at now).
-    //
-    // HINT: These are declared for you because the getters below need them to compile; Steps 4-7 read and update them.
-    // ============================================================
-    // TODO: study these two fields — every daily-limit method in Steps 4-7 works with them
     protected double dailyTransferTotal = 0.0;
     protected LocalDateTime lastTransferDate = LocalDateTime.now();
 
@@ -135,7 +125,7 @@ public abstract class Account implements IAccount {
 
     public boolean canTransfer(double amount) {
         resetDailyTransferIfNeeded();
-        return dailyTransferTotal + amount <= getDailyTransferLimit();
+        return (dailyTransferTotal + amount) <= getDailyTransferLimit();
     }
 
     public void updateDailyTransferTotal(double amount) {
@@ -153,4 +143,43 @@ public abstract class Account implements IAccount {
 
     public double getDailyTransferTotal() { return dailyTransferTotal; }
     public LocalDateTime getLastTransferDate() { return lastTransferDate; }
+
+    // ============================================================
+    // Helper: buildTransaction (COMPLETE — provided for convenience)
+    // ============================================================
+    protected Transaction buildTransaction(TransactionType type, double amount, 
+                                           int fromAcc, int toAcc, String desc) {
+        return new Transaction(
+            Transaction.generateId(),
+            LocalDateTime.now(),
+            this.accountNumber,
+            type, amount, this.balance, "SUCCESS",
+            desc, fromAcc, toAcc
+        );
+    }
+
+    // ============================================================
+    // 📝 STEP 7: Add depositWithTransaction
+    //
+    // INSTRUCTIONS:
+    //   1. Call deposit(amount) to perform standard deposit logic and validation.
+    //   2. Build and return a Transaction object with type DEPOSIT using buildTransaction().
+    // ============================================================
+    public Transaction depositWithTransaction(double amount) throws AccountException {
+        deposit(amount);
+        return buildTransaction(TransactionType.DEPOSIT, amount, 0, 0, "Deposit of Rs. " + amount);
+    }
+
+    // ============================================================
+    // 📝 STEP 8: Add withdrawWithTransaction
+    //
+    // INSTRUCTIONS:
+    //   1. Call withdraw(amount, pin) to perform standard withdrawal logic and validation.
+    //   2. Build and return a Transaction object with type WITHDRAW using buildTransaction().
+    // ============================================================
+    // TODO: perform withdraw and return Transaction record
+    public Transaction withdrawWithTransaction(double amount, int pin) throws AccountException {
+        withdraw(amount, pin);
+        return buildTransaction(TransactionType.WITHDRAW, amount, 0, 0, "Withdrawal of Rs. " + amount);
+    }
 }

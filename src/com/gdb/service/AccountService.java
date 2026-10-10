@@ -10,6 +10,9 @@ import com.gdb.command.DepositCommand;
 import com.gdb.command.WithdrawCommand;
 import com.gdb.command.TransferCommand;
 import com.gdb.command.TransactionCommand;
+import com.gdb.repository.AccountRepository;
+import com.gdb.repository.TransactionRepository;
+import com.gdb.repository.RepositoryFactory;
 
 import java.util.*;
 
@@ -18,10 +21,10 @@ public class AccountService {
     // 📝 STEP 1: Declare Fields
     // ============================================================
 
-    private Map<Integer, IAccount> accounts;
+    private final AccountRepository accounts;
+    private final TransactionRepository transactions;
     private TransactionLogger logger;
     private TransferService transferService;
-    private int nextAccountNumber;
 
     // ============================================================
     // 📝 STEP 2: Constructor
@@ -35,10 +38,15 @@ public class AccountService {
     // ============================================================
 
     public AccountService(TransactionLogger logger) {
+        this(logger, RepositoryFactory.getAccountRepository(), RepositoryFactory.getTransactionRepository());
+    }
+
+    public AccountService(TransactionLogger logger, AccountRepository accounts,
+                          TransactionRepository transactions) {
         this.logger = logger;
-        this.accounts = new HashMap<>();
+        this.accounts = Objects.requireNonNull(accounts, "accounts");
+        this.transactions = Objects.requireNonNull(transactions, "transactions");
         this.transferService = new TransferService();
-        this.nextAccountNumber = 1001;
     }
 
     // ============================================================
@@ -53,9 +61,9 @@ public class AccountService {
 
     public IAccount openAccount(String type, String name, int age, double initialBalance)
             throws AccountException {
-        int accountNumber = nextAccountNumber++;
+        int accountNumber = accounts.nextAccountNumber();
         IAccount account = AccountFactory.createAccount(type, accountNumber, name, age, initialBalance);
-        accounts.put(accountNumber, account);
+        accounts.save(account);
         return account;
     }
 
@@ -70,7 +78,7 @@ public class AccountService {
     // ============================================================
 
     public void closeAccount(int accountNumber, int pin) throws AccountException {
-        IAccount account = accounts.get(accountNumber);
+        IAccount account = accounts.findById(accountNumber);
         if (account == null) {
             throw new AccountException("Account not found: " + accountNumber);
         }
@@ -78,6 +86,7 @@ public class AccountService {
             throw new InvalidPinException("Incorrect PIN");
         }
         account.closeAccount();
+        accounts.update(account);
     }
 
     // ============================================================
@@ -92,12 +101,13 @@ public class AccountService {
     // ============================================================
 
     public Transaction deposit(int accountNumber, double amount) throws Exception {
-        IAccount account = accounts.get(accountNumber);
+        IAccount account = accounts.findById(accountNumber);
         if (account == null) {
             throw new AccountException("Account not found: " + accountNumber);
         }
         DepositCommand cmd = new DepositCommand(account, amount);
         cmd.execute();
+        transactions.save(cmd.getTransaction());
         if (logger != null) {
             logger.log(cmd);
         }
@@ -116,12 +126,13 @@ public class AccountService {
     // ============================================================
 
     public Transaction withdraw(int accountNumber, double amount, int pin) throws Exception {
-        IAccount account = accounts.get(accountNumber);
+        IAccount account = accounts.findById(accountNumber);
         if (account == null) {
             throw new AccountException("Account not found: " + accountNumber);
         }
         WithdrawCommand cmd = new WithdrawCommand(account, amount, pin);
         cmd.execute();
+        transactions.save(cmd.getTransaction());
         if (logger != null) {
             logger.log(cmd);
         }
@@ -141,16 +152,17 @@ public class AccountService {
 
     public Transaction transfer(int fromAccountNumber, int toAccountNumber,
                                 double amount, int pin) throws Exception {
-        IAccount fromAccount = accounts.get(fromAccountNumber);
+        IAccount fromAccount = accounts.findById(fromAccountNumber);
         if (fromAccount == null) {
             throw new AccountException("Account not found: " + fromAccountNumber);
         }
-        IAccount toAccount = accounts.get(toAccountNumber);
+        IAccount toAccount = accounts.findById(toAccountNumber);
         if (toAccount == null) {
             throw new AccountException("Account not found: " + toAccountNumber);
         }
         TransferCommand cmd = new TransferCommand(fromAccount, toAccount, amount, pin);
         cmd.execute();
+        transactions.save(cmd.getTransaction());
         if (logger != null) {
             logger.log(cmd);
         }
@@ -165,7 +177,7 @@ public class AccountService {
     // ============================================================
 
     public IAccount getAccount(int accountNumber) {
-        return accounts.get(accountNumber);
+        return accounts.findById(accountNumber);
     }
 
     // ============================================================
@@ -176,7 +188,7 @@ public class AccountService {
     // ============================================================
 
     public List<IAccount> getAllAccounts() {
-        return new ArrayList<>(accounts.values());
+        return accounts.findAll();
     }
 
     // ============================================================
@@ -198,6 +210,6 @@ public class AccountService {
     // ============================================================
     
     public int getNextAccountNumber() {
-        return nextAccountNumber;
+        return accounts.nextAccountNumber();
     }
 }

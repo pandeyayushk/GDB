@@ -31,3 +31,8 @@ bin/
 
 ### Data Files ###
 data/
+
+# SQLite database created by the JDBC activity
+gdb.db
+gdb.db-shm
+gdb.db-wal

@@ -2,7 +2,7 @@ package com.gdb.logging;
 
 import com.gdb.command.TransactionCommand;
 import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class FileLogDestination implements LogDestination {

@@ -4,7 +4,7 @@ import com.gdb.domain.IAccount;
 import com.gdb.domain.Transaction;
 import com.gdb.command.TransactionCommand;
 import com.gdb.service.AccountService;
-import com.gdb.exceptions.AccountException;
+
 
 import java.util.*;
 

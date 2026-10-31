@@ -1,7 +1,7 @@
 package com.gdb.tests;
 
 import com.gdb.domain.IAccount;
-import com.gdb.domain.Transaction;
+
 import com.gdb.logging.MemoryLogDestination;
 import com.gdb.logging.TransactionLogger;
 import com.gdb.repository.*;

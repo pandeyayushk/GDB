@@ -1,7 +1,6 @@
 package com.gdb.tests;
 
 import com.gdb.db.ConnectionProvider;
-import com.gdb.db.JdbcConnectionProvider;
 import com.gdb.db.SchemaInitializer;
 import com.gdb.repository.RepositoryFactory;
 import java.sql.Connection;

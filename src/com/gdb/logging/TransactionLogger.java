@@ -1,7 +1,7 @@
 package com.gdb.logging;
 
 import com.gdb.command.TransactionCommand;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**

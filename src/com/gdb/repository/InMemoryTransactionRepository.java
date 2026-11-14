@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 /** List-backed transaction repository. */
 public class InMemoryTransactionRepository implements TransactionRepository {
     private final List<Transaction> transactions = new ArrayList<>();
-    public void save(Transaction transaction) { transactions.add(transaction); }
-    public List<Transaction> findByAccount(int accountNumber) {
+    public synchronized void save(Transaction transaction) { transactions.add(transaction); }
+    public synchronized List<Transaction> findByAccount(int accountNumber) {
         return transactions.stream().filter(t -> t.getAccountNumber() == accountNumber
                 || t.getFromAccount() == accountNumber || t.getToAccount() == accountNumber)
                 .collect(Collectors.toList());
     }
-    public List<Transaction> findAll() { return new ArrayList<>(transactions); }
-    public void clear() { transactions.clear(); }
+    public synchronized List<Transaction> findAll() { return new ArrayList<>(transactions); }
+    public synchronized void clear() { transactions.clear(); }
 }

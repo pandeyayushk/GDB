@@ -11,18 +11,18 @@ public class InMemoryAccountRepository implements AccountRepository {
     private final Map<Integer, IAccount> accounts = new LinkedHashMap<>();
     private int nextAccountNumber = 1001;
 
-    public void save(IAccount account) {
+    public synchronized void save(IAccount account) {
         accounts.put(account.getAccountNumber(), account);
         nextAccountNumber = Math.max(nextAccountNumber, account.getAccountNumber() + 1);
     }
-    public IAccount findById(int accountNumber) { return accounts.get(accountNumber); }
-    public List<IAccount> findAll() { return new ArrayList<>(accounts.values()); }
-    public void update(IAccount account) {
+    public synchronized IAccount findById(int accountNumber) { return accounts.get(accountNumber); }
+    public synchronized List<IAccount> findAll() { return new ArrayList<>(accounts.values()); }
+    public synchronized void update(IAccount account) {
         if (exists(account.getAccountNumber())) accounts.put(account.getAccountNumber(), account);
     }
-    public void delete(int accountNumber) { accounts.remove(accountNumber); }
-    public boolean exists(int accountNumber) { return accounts.containsKey(accountNumber); }
-    public int nextAccountNumber() { return nextAccountNumber; }
+    public synchronized void delete(int accountNumber) { accounts.remove(accountNumber); }
+    public synchronized boolean exists(int accountNumber) { return accounts.containsKey(accountNumber); }
+    public synchronized int nextAccountNumber() { return nextAccountNumber; }
     public synchronized void transfer(int fromAccountNumber, int toAccountNumber, double amount, int pin) {
         if (amount <= 0 || !Double.isFinite(amount)) throw new IllegalArgumentException("Transfer amount must be positive and finite");
         IAccount from = accounts.get(fromAccountNumber), to = accounts.get(toAccountNumber);

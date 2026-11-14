@@ -15,7 +15,7 @@ public final class RepositoryFactory {
     private static final Properties PROPERTIES = loadProperties();
     private static final String MODE = PROPERTIES.getProperty("persistence.mode", "memory").trim().toLowerCase(Locale.ROOT);
     private static final AccountRepository ACCOUNTS = createConfiguredAccountRepository();
-    private static final TransactionRepository TRANSACTIONS = new InMemoryTransactionRepository();
+    private static final TransactionRepository TRANSACTIONS = createConfiguredTransactionRepository();
 
     private RepositoryFactory() { }
 
@@ -58,14 +58,18 @@ public final class RepositoryFactory {
         return "jdbc".equals(MODE) ? new JdbcAccountRepository(getConnectionProvider()) : new InMemoryAccountRepository();
     }
 
+    private static TransactionRepository createConfiguredTransactionRepository() {
+        return "jdbc".equals(MODE) ? new JdbcTransactionRepository(getConnectionProvider()) : new InMemoryTransactionRepository();
+    }
+
     public static AccountRepository createAccountRepository(String mode) {
         if (mode == null || "memory".equalsIgnoreCase(mode.trim())) return new InMemoryAccountRepository();
         if ("jdbc".equalsIgnoreCase(mode.trim())) return new JdbcAccountRepository(getConnectionProvider());
         throw new IllegalArgumentException("Unsupported persistence.mode: " + mode);
     }
     public static TransactionRepository createTransactionRepository(String mode) {
-        if (mode == null || "memory".equalsIgnoreCase(mode.trim()) || "jdbc".equalsIgnoreCase(mode.trim()))
-            return new InMemoryTransactionRepository();
+        if (mode == null || "memory".equalsIgnoreCase(mode.trim())) return new InMemoryTransactionRepository();
+        if ("jdbc".equalsIgnoreCase(mode.trim())) return new JdbcTransactionRepository(getConnectionProvider());
         throw new IllegalArgumentException("Unsupported persistence.mode: " + mode);
     }
 }

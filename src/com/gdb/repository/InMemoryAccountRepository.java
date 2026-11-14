@@ -23,4 +23,13 @@ public class InMemoryAccountRepository implements AccountRepository {
     public void delete(int accountNumber) { accounts.remove(accountNumber); }
     public boolean exists(int accountNumber) { return accounts.containsKey(accountNumber); }
     public int nextAccountNumber() { return nextAccountNumber; }
+    public synchronized void transfer(int fromAccountNumber, int toAccountNumber, double amount, int pin) {
+        if (amount <= 0 || !Double.isFinite(amount)) throw new IllegalArgumentException("Transfer amount must be positive and finite");
+        IAccount from = accounts.get(fromAccountNumber), to = accounts.get(toAccountNumber);
+        if (from == null || to == null) throw new IllegalArgumentException("Both accounts must exist");
+        if (!from.isActive() || !to.isActive() || from.getBalance() < amount)
+            throw new IllegalStateException("Accounts must be active and source balance sufficient");
+        try { from.withdraw(amount, pin); to.deposit(amount); }
+        catch (com.gdb.exceptions.AccountException e) { throw new IllegalStateException(e.getMessage(), e); }
+    }
 }

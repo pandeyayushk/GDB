@@ -12,4 +12,6 @@ public interface AccountRepository {
     void delete(int accountNumber);
     boolean exists(int accountNumber);
     int nextAccountNumber();
+    /** Atomically debits one account and credits another. */
+    void transfer(int fromAccountNumber, int toAccountNumber, double amount, int pin);
 }

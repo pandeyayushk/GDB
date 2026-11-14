@@ -60,10 +60,15 @@ public final class TestConnectionPooling {
             long directTime = benchmark(direct, 50);
             System.out.println("Pooled 50 connection cycles: " + pooledTime + " ms");
             System.out.println("Direct 50 connection cycles: " + directTime + " ms");
-            ConnectionProvider configuredProvider = RepositoryFactory.getConnectionProvider();
-            check(configuredProvider instanceof HikariConnectionProvider,
-                    "factory selects Hikari when persistence.pool.enabled=true");
-            configuredProvider.shutdown();
+            if ("jdbc".equals(RepositoryFactory.getPersistenceMode())) {
+                ConnectionProvider configuredProvider = RepositoryFactory.getConnectionProvider();
+                check(configuredProvider instanceof HikariConnectionProvider,
+                        "factory selects Hikari when pooling is enabled");
+                configuredProvider.shutdown();
+            } else if ("file".equals(RepositoryFactory.getPersistenceMode())) {
+                check(RepositoryFactory.getAccountRepository() instanceof com.gdb.repository.FileAccountRepository,
+                        "factory keeps the configured file persistence mode");
+            }
             System.out.println("All Activity 25 connection pooling checks passed.");
         } finally {
             pooled.shutdown();

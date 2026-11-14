@@ -1,19 +1,21 @@
-# Activity 25: Connection Pooling (NFR - Non-Functional Requirements)
+# Activity 26: File Repository (CSV + Atomic Writes + Backup)
 
 ## Overview
-This activity replaces direct `DriverManager` connection calls with **HikariCP Connection Pooling**, enhancing application scalability, connection reusability, and latency characteristics under high concurrency.
+This activity completes the persistence story by building file-based repositories (`FileAccountRepository`, `FileTransactionRepository`) backed by CSV formatting, crash-safe atomic write operations (`AtomicFileWriter`), and automated timestamped backups (`BackupManager`).
 
 ---
 
 ## Files Included
 | File | Description |
 |---|---|
-| `lib/HikariCP-5.0.1.jar` | High-performance JDBC connection pool library |
-| `src/com/gdb/db/HikariConnectionProvider.java` | Connection pool implementation backed by `HikariDataSource` |
-| `src/main/resources/config/persistence.properties` | Configured with `persistence.pool.enabled=true`, pool size, and timeouts |
-| `src/com/gdb/repository/RepositoryFactory.java` | Factory dynamically selecting `HikariConnectionProvider` when pool is enabled |
-| `src/com/gdb/tests/TestConnectionPooling.java` | Test suite verifying pool lifecycle, concurrent usage, and performance benchmarks |
-| `docs/ACTIVITY_25.md` | Student lab guide with architecture diagrams, instructions, and benchmarks |
+| `src/com/gdb/file/CsvMapper.java` | Serializes and deserializes `Account` and `Transaction` models to/from CSV rows |
+| `src/com/gdb/file/AtomicFileWriter.java` | Writes to temporary files and atomically renames to target path for crash resilience |
+| `src/com/gdb/file/BackupManager.java` | Creates timestamped backup copies (`.bak.<timestamp>`) and prunes old backups |
+| `src/com/gdb/repository/FileAccountRepository.java` | File-backed repository persisting account records to CSV |
+| `src/com/gdb/repository/FileTransactionRepository.java` | File-backed repository persisting transaction logs to CSV |
+| `src/com/gdb/repository/RepositoryFactory.java` | Factory updated to support `persistence.mode=file` |
+| `src/com/gdb/tests/TestFileRepository.java` | Comprehensive test driver validating CSV persistence, atomic writes, and backups |
+| `docs/ACTIVITY_26.md` | Complete student lab guide with diagrams, instructions, and compilation commands |
 
 ---
 
@@ -24,12 +26,12 @@ This activity replaces direct `DriverManager` connection calls with **HikariCP C
 New-Item bin -ItemType Directory -Force | Out-Null
 Copy-Item src\mainesources\* bin -Recurse -Force
 javac -encoding UTF-8 -cp "lib/*;." -d bin (Get-ChildItem -Recurse -Filter *.java src).FullName
-java -cp "lib/*;bin" com.gdb.tests.TestConnectionPooling
+java -cp "lib/*;bin" com.gdb.tests.TestFileRepository
 ```
 
 ### Linux & macOS (Terminal / Bash)
 ```bash
 mkdir -p bin && cp -r src/main/resources/* bin/
 javac -encoding UTF-8 -cp "lib/*:." -d bin $(find src -name "*.java")
-java -cp "lib/*:bin" com.gdb.tests.TestConnectionPooling
+java -cp "lib/*:bin" com.gdb.tests.TestFileRepository
 ```

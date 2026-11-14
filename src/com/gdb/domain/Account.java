@@ -148,6 +148,11 @@ public abstract class Account implements IAccount, java.io.Serializable {
     public Integer getPin() { return pin; }
     /** Restores the opening date read from persistent storage. */
     public void setOpeningDate(String openingDate) { this.openingDate = openingDate; }
+    /** Restores a persisted balance while preserving the concrete account type. */
+    public void restoreBalance(double balance) {
+        if (!Double.isFinite(balance) || balance < 0) throw new IllegalArgumentException("Balance must be finite and nonnegative");
+        this.balance = balance;
+    }
     public LocalDateTime getLastTransferDate() { return lastTransferDate; }
 
     protected Transaction buildTransaction(TransactionType type, double amount, 

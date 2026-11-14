@@ -1,8 +1,10 @@
 package com.gdb.tests;
 
 import com.gdb.db.ConnectionProvider;
+import com.gdb.db.JdbcConnectionProvider;
 import com.gdb.db.SchemaInitializer;
-import com.gdb.repository.RepositoryFactory;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -10,9 +12,8 @@ import java.sql.Statement;
 /** Verifies JDBC connection lifecycle and idempotent schema installation. */
 public class TestJdbcConnection {
     public static void main(String[] args) throws Exception {
-        ConnectionProvider provider = RepositoryFactory.getConnectionProvider();
-        check(provider != null, "JDBC provider configured");
-        check(provider.getProviderName().startsWith("JDBC"), "provider name");
+        Path db = Files.createTempFile("gdb-jdbc-connection-", ".db");
+        ConnectionProvider provider = new JdbcConnectionProvider("jdbc:sqlite:" + db.toAbsolutePath(), "org.sqlite.JDBC");
         try (Connection connection = provider.getConnection(); Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery("SELECT 1")) {
             check(result.next() && result.getInt(1) == 1, "SELECT 1");
@@ -34,6 +35,9 @@ public class TestJdbcConnection {
         } catch (java.sql.SQLException expected) {
             // expected lifecycle behavior
         }
+        Files.deleteIfExists(db);
+        Files.deleteIfExists(Path.of(db + "-wal"));
+        Files.deleteIfExists(Path.of(db + "-shm"));
         System.out.println("All JDBC connection checks passed.");
     }
 

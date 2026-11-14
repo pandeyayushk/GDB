@@ -107,6 +107,7 @@ public class AccountService {
         }
         DepositCommand cmd = new DepositCommand(account, amount);
         cmd.execute();
+        accounts.update(account);
         transactions.save(cmd.getTransaction());
         if (logger != null) {
             logger.log(cmd);
@@ -132,6 +133,7 @@ public class AccountService {
         }
         WithdrawCommand cmd = new WithdrawCommand(account, amount, pin);
         cmd.execute();
+        accounts.update(account);
         transactions.save(cmd.getTransaction());
         if (logger != null) {
             logger.log(cmd);
@@ -162,6 +164,8 @@ public class AccountService {
         }
         TransferCommand cmd = new TransferCommand(fromAccount, toAccount, amount, pin);
         cmd.execute();
+        accounts.update(fromAccount);
+        accounts.update(toAccount);
         transactions.save(cmd.getTransaction());
         if (logger != null) {
             logger.log(cmd);

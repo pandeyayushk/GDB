@@ -35,7 +35,7 @@ public final class RepositoryFactory {
     }
 
     private static ConnectionProvider createConnectionProvider() {
-        if ("memory".equals(MODE)) return null;
+        if ("memory".equals(MODE) || "file".equals(MODE)) return null;
         if (!"jdbc".equals(MODE)) {
             throw new IllegalArgumentException("Unsupported persistence.mode: " + MODE + " (file is a placeholder)");
         }
@@ -61,21 +61,41 @@ public final class RepositoryFactory {
     public static String getPersistenceMode() { return MODE; }
 
     private static AccountRepository createConfiguredAccountRepository() {
-        return "jdbc".equals(MODE) ? new JdbcAccountRepository(getConnectionProvider()) : new InMemoryAccountRepository();
+        if ("jdbc".equals(MODE)) return new JdbcAccountRepository(getConnectionProvider());
+        if ("file".equals(MODE)) return new FileAccountRepository(accountFilePath());
+        return new InMemoryAccountRepository();
     }
 
     private static TransactionRepository createConfiguredTransactionRepository() {
-        return "jdbc".equals(MODE) ? new JdbcTransactionRepository(getConnectionProvider()) : new InMemoryTransactionRepository();
+        if ("jdbc".equals(MODE)) return new JdbcTransactionRepository(getConnectionProvider());
+        if ("file".equals(MODE)) {
+            return new FileTransactionRepository(transactionFilePath(), ACCOUNTS);
+        }
+        return new InMemoryTransactionRepository();
     }
 
     public static AccountRepository createAccountRepository(String mode) {
         if (mode == null || "memory".equalsIgnoreCase(mode.trim())) return new InMemoryAccountRepository();
         if ("jdbc".equalsIgnoreCase(mode.trim())) return new JdbcAccountRepository(getConnectionProvider());
+        if ("file".equalsIgnoreCase(mode.trim())) return new FileAccountRepository(accountFilePath());
         throw new IllegalArgumentException("Unsupported persistence.mode: " + mode);
     }
     public static TransactionRepository createTransactionRepository(String mode) {
         if (mode == null || "memory".equalsIgnoreCase(mode.trim())) return new InMemoryTransactionRepository();
         if ("jdbc".equalsIgnoreCase(mode.trim())) return new JdbcTransactionRepository(getConnectionProvider());
+        if ("file".equalsIgnoreCase(mode.trim())) {
+            AccountRepository accounts = "file".equals(MODE) ? ACCOUNTS : new FileAccountRepository(accountFilePath());
+            return new FileTransactionRepository(transactionFilePath(), accounts);
+        }
         throw new IllegalArgumentException("Unsupported persistence.mode: " + mode);
+    }
+
+    private static String accountFilePath() {
+        return PROPERTIES.getProperty("persistence.file.account.path",
+                PROPERTIES.getProperty("persistence.file.accounts", "data/accounts.csv"));
+    }
+    private static String transactionFilePath() {
+        return PROPERTIES.getProperty("persistence.file.transaction.path",
+                PROPERTIES.getProperty("persistence.file.transactions", "data/transactions.csv"));
     }
 }

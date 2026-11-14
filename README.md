@@ -1,25 +1,29 @@
-# Activity 27: Threads – Basics + Race Conditions + Synchronization
+# Activity 28: Concurrency – Locks, Atomics, Concurrent Collections
 
 ## Objective
-Understand the mechanics of multi-threaded execution in Java, observe the dangers of race conditions and lost updates on shared banking state, and master intrinsic locks (`synchronized`) to guarantee thread safety.
+Upgrade from coarse-grained `synchronized` locks to fine-grained concurrency utilities in `java.util.concurrent`. Implement per-account locking using `ReentrantLock` and `ConcurrentHashMap`, deadlock-free lock ordering, `ReentrantReadWriteLock` for read optimization, and lock-free CAS primitives with `AtomicLong` and `AtomicReference`.
 
 ## Key Concepts
-1. **Threads & Concurrency**: Creating and starting background worker threads using `Runnable` and `Thread`.
-2. **Race Conditions**: When multiple threads read and write shared data without synchronization, interleaved execution leads to lost updates.
-3. **Thread.join()**: Pausing the main orchestrator thread until background worker threads complete their execution.
-4. **Intrinsic Synchronization**: Using `synchronized` methods/blocks to enforce mutual exclusion and ensure memory visibility across CPU caches.
-5. **Conservation of Funds**: In financial applications, concurrent multi-account transactions must never create or destroy funds.
+1. **AccountLockRegistry**: Dynamically manage per-account `ReentrantLock` instances using `ConcurrentHashMap.computeIfAbsent`.
+2. **Fine-Grained Locking**: Operations on Account 1001 do not block concurrent operations on Account 1002.
+3. **Deadlock Prevention via Lock Ordering**: When transferring between two accounts, always acquire locks in sorted order (`Math.min` before `Math.max`).
+4. **ReentrantReadWriteLock**: Allow concurrent read queries (`getBalance`) while securing exclusive access for writes (`deposit`/`withdraw`).
+5. **Lock-Free Atomics & CAS**: Use `AtomicLong` and `AtomicReference.compareAndSet` for ultra-fast, lock-free coordination.
 
 ## Directory Structure
-- `src/com/gdb/concurrency/ConcurrentDepositDemo.java`: Race condition demonstration driver.
-- `src/com/gdb/service/ThreadSafeAccountService.java`: Synchronized banking service.
-- `src/com/gdb/tests/TestConcurrency.java`: Concurrency verification test suite.
+- `src/com/gdb/concurrency/AccountLockRegistry.java`: Per-account lock registry.
+- `src/com/gdb/concurrency/AccountLock.java`: AutoCloseable lock helper.
+- `src/com/gdb/service/LockedAccountService.java`: Fine-grained locked banking service.
+- `src/com/gdb/service/AtomicAccountService.java`: Lock-free atomic service.
+- `src/com/gdb/tests/TestLocksAndAtomics.java`: Comprehensive concurrency verification test suite.
 
 ## How to Run
 ```bash
-# Compile
-javac -d bin -cp "lib/*" $(find src -name "*.java")
+# Windows (PowerShell)
+javac -encoding UTF-8 -cp "lib/*;." -d bin (Get-ChildItem -Recurse -Filter *.java src).FullName
+java -ea -cp "lib/*;bin" com.gdb.tests.TestLocksAndAtomics
 
-# Run Concurrency Test Suite
-java -ea -cp "lib/*;bin" com.gdb.tests.TestConcurrency
+# Linux & macOS
+javac -encoding UTF-8 -cp "lib/*:." -d bin $(find src -name "*.java")
+java -ea -cp "lib/*:bin" com.gdb.tests.TestLocksAndAtomics
 ```

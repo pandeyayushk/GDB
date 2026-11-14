@@ -9,4 +9,8 @@ public interface TransactionRepository {
     List<Transaction> findByAccount(int accountNumber);
     List<Transaction> findAll();
     void clear();
+    /** Executes a database-backed atomic transfer and records its audit row when supported. */
+    default Transaction transfer(int fromAccountNumber, int toAccountNumber, double amount) {
+        throw new UnsupportedOperationException("Atomic repository transfers require JDBC persistence");
+    }
 }

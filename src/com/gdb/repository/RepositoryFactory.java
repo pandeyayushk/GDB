@@ -14,7 +14,7 @@ public final class RepositoryFactory {
     private static final String CONFIG = "/config/persistence.properties";
     private static final Properties PROPERTIES = loadProperties();
     private static final String MODE = PROPERTIES.getProperty("persistence.mode", "memory").trim().toLowerCase(Locale.ROOT);
-    private static final AccountRepository ACCOUNTS = new InMemoryAccountRepository();
+    private static final AccountRepository ACCOUNTS = createConfiguredAccountRepository();
     private static final TransactionRepository TRANSACTIONS = new InMemoryTransactionRepository();
 
     private RepositoryFactory() { }
@@ -54,10 +54,13 @@ public final class RepositoryFactory {
     public static ConnectionProvider getConnectionProvider() { return JdbcProviderHolder.INSTANCE; }
     public static String getPersistenceMode() { return MODE; }
 
-    /** Repository implementations remain in-memory until the JDBC repository activity. */
+    private static AccountRepository createConfiguredAccountRepository() {
+        return "jdbc".equals(MODE) ? new JdbcAccountRepository(getConnectionProvider()) : new InMemoryAccountRepository();
+    }
+
     public static AccountRepository createAccountRepository(String mode) {
-        if (mode == null || "memory".equalsIgnoreCase(mode.trim()) || "jdbc".equalsIgnoreCase(mode.trim()))
-            return new InMemoryAccountRepository();
+        if (mode == null || "memory".equalsIgnoreCase(mode.trim())) return new InMemoryAccountRepository();
+        if ("jdbc".equalsIgnoreCase(mode.trim())) return new JdbcAccountRepository(getConnectionProvider());
         throw new IllegalArgumentException("Unsupported persistence.mode: " + mode);
     }
     public static TransactionRepository createTransactionRepository(String mode) {

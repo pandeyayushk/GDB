@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 
 /** Executes the idempotent DDL script from the application classpath. */
 public final class SchemaInitializer {
@@ -33,6 +34,19 @@ public final class SchemaInitializer {
                 String command = sql.trim();
                 if (!command.isEmpty()) statement.execute(command);
             }
+            // Upgrade databases created before account PIN and tenure were persisted.
+            addColumnIfMissing(connection, "tenure_years", "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(connection, "pin", "INTEGER");
+        }
+    }
+
+    private static void addColumnIfMissing(Connection connection, String column, String declaration) throws SQLException {
+        boolean found = false;
+        try (Statement statement = connection.createStatement(); ResultSet columns = statement.executeQuery("PRAGMA table_info(accounts)")) {
+            while (columns.next()) if (column.equalsIgnoreCase(columns.getString("name"))) found = true;
+        }
+        if (!found) try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE accounts ADD COLUMN " + column + " " + declaration);
         }
     }
 }

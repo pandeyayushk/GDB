@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS accounts (
     age INTEGER NOT NULL,
     balance REAL NOT NULL,
     active INTEGER NOT NULL DEFAULT 1,
-    opening_date TEXT
+    opening_date TEXT,
+    tenure_years INTEGER NOT NULL DEFAULT 0,
+    pin INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS transactions (

@@ -109,6 +109,7 @@ public abstract class Account implements IAccount, java.io.Serializable {
     }
 
     @Override public int getAccountNumber() { return accountNumber; }
+    public int getAge() { return age; }
     @Override public String getAccountHolderName() { return accountHolderName; }
     @Override public double getBalance() { return balance; }
     @Override public String getOpeningDate() { return openingDate; }
@@ -143,6 +144,10 @@ public abstract class Account implements IAccount, java.io.Serializable {
     }
 
     public double getDailyTransferTotal() { return dailyTransferTotal; }
+    /** Returns the configured PIN for persistence mapping, or null when unset. */
+    public Integer getPin() { return pin; }
+    /** Restores the opening date read from persistent storage. */
+    public void setOpeningDate(String openingDate) { this.openingDate = openingDate; }
     public LocalDateTime getLastTransferDate() { return lastTransferDate; }
 
     protected Transaction buildTransaction(TransactionType type, double amount, 

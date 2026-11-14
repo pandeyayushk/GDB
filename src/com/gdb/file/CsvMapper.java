@@ -47,7 +47,8 @@ public final class CsvMapper {
             IAccount account = AccountFactory.createAccount(type, number, holder, age, balance, tenure);
             if (account instanceof Account) {
                 Account base = (Account)account;
-                if (fields.size() >= 7 && !fields.get(6).trim().isEmpty()) base.setPin(Integer.parseInt(fields.get(6).trim()));
+                if (fields.size() >= 7 && !fields.get(6).trim().isEmpty() && !"0".equals(fields.get(6).trim()))
+                    base.setPin(Integer.parseInt(fields.get(6).trim()));
                 if (fields.size() >= 8 && !fields.get(7).isEmpty()) base.setOpeningDate(fields.get(7));
             }
             if ("inactive".equalsIgnoreCase(fields.get(5).trim())) account.closeAccount();
@@ -80,7 +81,7 @@ public final class CsvMapper {
             return new Transaction(f.get(0), LocalDateTime.parse(f.get(1).trim()), Integer.parseInt(f.get(2).trim()),
                     TransactionType.valueOf(f.get(3).trim()), Double.parseDouble(f.get(4).trim()),
                     Double.parseDouble(f.get(5).trim()), f.get(6), f.get(9),
-                    Integer.parseInt(f.get(7).trim()), Integer.parseInt(f.get(8).trim()));
+                    parseIntOrZero(f.get(7)), parseIntOrZero(f.get(8)));
         } catch (RuntimeException e) {
             throw new IllegalArgumentException("Invalid transaction CSV row: " + e.getMessage(), e);
         }
@@ -136,5 +137,9 @@ public final class CsvMapper {
         if (quoted) throw new IllegalArgumentException("Unclosed quoted CSV field");
         fields.add(value.toString());
         return fields;
+    }
+
+    private static int parseIntOrZero(String value) {
+        return value == null || value.trim().isEmpty() ? 0 : Integer.parseInt(value.trim());
     }
 }

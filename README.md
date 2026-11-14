@@ -1,37 +1,25 @@
-# Activity 26: File Repository (CSV + Atomic Writes + Backup)
+# Activity 27: Threads – Basics + Race Conditions + Synchronization
 
-## Overview
-This activity completes the persistence story by building file-based repositories (`FileAccountRepository`, `FileTransactionRepository`) backed by CSV formatting, crash-safe atomic write operations (`AtomicFileWriter`), and automated timestamped backups (`BackupManager`).
+## Objective
+Understand the mechanics of multi-threaded execution in Java, observe the dangers of race conditions and lost updates on shared banking state, and master intrinsic locks (`synchronized`) to guarantee thread safety.
 
----
+## Key Concepts
+1. **Threads & Concurrency**: Creating and starting background worker threads using `Runnable` and `Thread`.
+2. **Race Conditions**: When multiple threads read and write shared data without synchronization, interleaved execution leads to lost updates.
+3. **Thread.join()**: Pausing the main orchestrator thread until background worker threads complete their execution.
+4. **Intrinsic Synchronization**: Using `synchronized` methods/blocks to enforce mutual exclusion and ensure memory visibility across CPU caches.
+5. **Conservation of Funds**: In financial applications, concurrent multi-account transactions must never create or destroy funds.
 
-## Files Included
-| File | Description |
-|---|---|
-| `src/com/gdb/file/CsvMapper.java` | Serializes and deserializes `Account` and `Transaction` models to/from CSV rows |
-| `src/com/gdb/file/AtomicFileWriter.java` | Writes to temporary files and atomically renames to target path for crash resilience |
-| `src/com/gdb/file/BackupManager.java` | Creates timestamped backup copies (`.bak.<timestamp>`) and prunes old backups |
-| `src/com/gdb/repository/FileAccountRepository.java` | File-backed repository persisting account records to CSV |
-| `src/com/gdb/repository/FileTransactionRepository.java` | File-backed repository persisting transaction logs to CSV |
-| `src/com/gdb/repository/RepositoryFactory.java` | Factory updated to support `persistence.mode=file` |
-| `src/com/gdb/tests/TestFileRepository.java` | Comprehensive test driver validating CSV persistence, atomic writes, and backups |
-| `docs/ACTIVITY_26.md` | Complete student lab guide with diagrams, instructions, and compilation commands |
+## Directory Structure
+- `src/com/gdb/concurrency/ConcurrentDepositDemo.java`: Race condition demonstration driver.
+- `src/com/gdb/service/ThreadSafeAccountService.java`: Synchronized banking service.
+- `src/com/gdb/tests/TestConcurrency.java`: Concurrency verification test suite.
 
----
-
-## How to Compile & Run
-
-### Windows (PowerShell)
-```powershell
-New-Item bin -ItemType Directory -Force | Out-Null
-Copy-Item src\mainesources\* bin -Recurse -Force
-javac -encoding UTF-8 -cp "lib/*;." -d bin (Get-ChildItem -Recurse -Filter *.java src).FullName
-java -cp "lib/*;bin" com.gdb.tests.TestFileRepository
-```
-
-### Linux & macOS (Terminal / Bash)
+## How to Run
 ```bash
-mkdir -p bin && cp -r src/main/resources/* bin/
-javac -encoding UTF-8 -cp "lib/*:." -d bin $(find src -name "*.java")
-java -cp "lib/*:bin" com.gdb.tests.TestFileRepository
+# Compile
+javac -d bin -cp "lib/*" $(find src -name "*.java")
+
+# Run Concurrency Test Suite
+java -ea -cp "lib/*;bin" com.gdb.tests.TestConcurrency
 ```
